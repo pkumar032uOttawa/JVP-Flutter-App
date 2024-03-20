@@ -2,16 +2,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:jvp_app/model/shared_states.dart';
 import 'package:video_player/video_player.dart';
-import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_frame_extractor/video_frame_extractor.dart';
-import 'package:jvp_app/utils/delete_file.dart';
 import 'package:jvp_app/utils/illumination_check.dart';
 import 'package:jvp_app/ui/video_check_result.dart';
 import 'package:jvp_app/pages/video_upload_result.dart';
 import 'package:jvp_app/utils/yolo_detection.dart';
 import 'package:provider/provider.dart';
-import 'package:jvp_app/utils/video_upload.dart';
 
 class VideoCheckPage extends StatefulWidget {
   final String videoPath;
@@ -56,7 +53,6 @@ class _VideoCheckPageState extends State<VideoCheckPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Now it's safe to access the provider
-    print("!!!!!!!!!!!!!!!!!!!!!!! Start getting accelerometer data");
     _isAccelerometerValid = Provider.of<SharedState>(context, listen: false).isAccelerometerValid;
   }
 
@@ -68,9 +64,8 @@ class _VideoCheckPageState extends State<VideoCheckPage> {
     List<String> frames = await VideoFrameExtractor.fromFile(
         video: File(widget.videoPath),
         destinationDirectoryPath: tempPath,
-        imagesCount: 10
+        imagesCount: 3
     );
-
 
     // Check illumination
     int result = await checkIlluminationValues(frames, skinBrightness);

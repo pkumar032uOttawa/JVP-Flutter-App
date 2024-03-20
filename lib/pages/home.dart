@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:jvp_app/ui/profile.dart';
+import 'package:jvp_app/utils/websocket.dart';
 
 class Home extends StatefulWidget {
+  final String username;
+  Home({Key? key, required this.username}) : super(key: key);
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    WebSocketConnection webSocketConnection = new WebSocketConnection(widget.username);
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -53,18 +61,20 @@ class ReportsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        _buildButton(context, Icons.upload, 'Upload Video', () {
-          Navigator.pushNamed(context, "/video_taking");
-        }),
-        SizedBox(height: 20),
-        _buildButton(context, Icons.report, 'View Reports', () {
-          // Action for View Reports
-          Navigator.pushNamed(context, "/reports");
-        }),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          _buildButton(context, Icons.upload, 'Upload Video', () {
+            Navigator.pushNamed(context, "/video_taking");
+          }),
+          SizedBox(height: 20),
+          _buildButton(context, Icons.report, 'View Reports', () {
+            // Action for View Reports
+            Navigator.pushNamed(context, "/reports");
+          }),
+        ],
+      ),
     );
   }
 

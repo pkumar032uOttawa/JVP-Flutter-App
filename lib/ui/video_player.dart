@@ -30,9 +30,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         : VideoPlayerController.file(File(widget.videoLocation));
 
     await _videoPlayerController.initialize(); // Ensure controller is initialized before creating ChewieController
-
+    print("?????????????? in good case"+widget.videoLocation);
+    print("????????????? in good case"+mounted.toString());
     if (!mounted) return; // Check if the widget is still in the tree
 
+    print("?????????????? in good case"+_videoPlayerController.value.duration.inSeconds.toString());
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       aspectRatio: _videoPlayerController.value.aspectRatio,

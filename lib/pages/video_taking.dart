@@ -14,6 +14,7 @@ class VideoGuidePage extends StatefulWidget {
 
 class _VideoGuidePageState extends State<VideoGuidePage> {
   final ImagePicker _picker = ImagePicker();
+  bool closeVideos = false;
   String? _videoPath;
   @override
   void initState() {
@@ -118,11 +119,11 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
                 ),
               ),
             ),
-            GuideStep(
+            closeVideos==false ? GuideStep(
               stepNumber: 5,
               instruction: 'Sample video should look like this',
               visualComponent: VideoPlayerWidget(videoLocation: 'assets/tutorial.mp4'),
-            ),
+            ):SizedBox(),
 
             GuideStep(
               stepNumber: 6,
@@ -172,10 +173,13 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
               ) :
               Column(
                 children: [
-                  VideoPlayerWidget(videoLocation: _videoPath!, isAsset: false,),
+                  closeVideos==false?VideoPlayerWidget(videoLocation: _videoPath!, isAsset: false,):SizedBox(),
                   SizedBox(height: 10,),
                   ElevatedButton(
                     onPressed: () {
+                      setState(() {
+                        closeVideos=true;
+                      });
                       // Navigate to VideoCheckPage when the button is pressed
                       Navigator.pushReplacement(
                         context,

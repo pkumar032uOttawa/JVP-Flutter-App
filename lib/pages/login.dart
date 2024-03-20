@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jvp_app/model/shared_states.dart';
+import 'package:jvp_app/pages/home.dart';
 import 'package:jvp_app/utils/dialog.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert'; // For json encoding/decoding
@@ -41,7 +42,12 @@ class _LoginState extends State<Login> {
         var result = json.decode(response.body);
         Provider.of<SharedState>(context, listen: false).username = result["username"];
         Provider.of<SharedState>(context, listen: false).skinBrightness = result["skin"];
-        Navigator.pushReplacementNamed(context, "/home");
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Home(username: result["username"]),
+          ),
+        );
       } else if (response.statusCode == 401) {
         showCustomizedDialog('Error', 'Wrong Password or Username.', context);
       }

@@ -1,5 +1,4 @@
 import 'package:flutter_vision/flutter_vision.dart';
-import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image/image.dart' as img;
 
@@ -9,9 +8,7 @@ Future<bool> checkPersonPresence(List<String> imagePaths) async {
 
 
   for (String path in imagePaths) {
-    print("Checking Image: "+path+" For person");
     bool findPerson = await yoloOnImage(vision, path);
-    print("Result from yoloOnImage: "+findPerson.toString());
     if(!findPerson){return false;}
   }
 
@@ -40,7 +37,6 @@ Future<bool> yoloOnImage(FlutterVision vision, String imagePath) async {
       confThreshold: 0.4,
       classThreshold: 0.5);
   if (result.isNotEmpty) {
-    print("result: "+ result.toString());
     for (final x in result) {
       if (x['tag'] == 'person') {
         return true;

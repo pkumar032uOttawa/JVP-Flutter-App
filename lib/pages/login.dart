@@ -37,24 +37,25 @@ class _LoginState extends State<Login> {
         }),
         headers: {'Content-Type': 'application/json'},
       );
-
       if (response.statusCode == 200) {
         var result = json.decode(response.body);
         Provider.of<SharedState>(context, listen: false).username = result["username"];
-        Provider.of<SharedState>(context, listen: false).skinBrightness = result["skin"];
+        Provider.of<SharedState>(context, listen: false).skinBrightness = result["skinColor"];
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => Home(username: result["username"]),
           ),
         );
-      } else if (response.statusCode == 401) {
+      } else{
         showCustomizedDialog('Error', 'Wrong Password or Username.', context);
       }
-    } catch (e) {
+    }
+    catch (e) {
       print(e.toString());
       showCustomizedDialog('Error', 'Unable to connect to the server.', context);
-    } finally {
+    }
+    finally {
       setState(() {
         _isLoading = false;
       });

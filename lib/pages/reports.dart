@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'dart:io';
 import 'dart:convert' as convert;
+import 'package:jvp_app/utils/progress_bar.dart';
+import 'package:provider/provider.dart';
+import 'package:jvp_app/model/shared_states.dart';
 
 class Reports extends StatefulWidget {
   @override
@@ -14,7 +17,7 @@ class _ReportsState extends State<Reports> {
 
   void getReports() async {
     try {
-      Response response = await get(Uri.parse('https://jvp.cepheus0.com:2531/fetchData/ezra'));
+      Response response = await get(Uri.parse('https://jvp.cepheus0.com:2531/fetchData/'+Provider.of<SharedState>(context, listen: false).username));
       if (response.statusCode == 200) {
         Map<String, dynamic> data = convert.jsonDecode(response.body);
         print(data);
@@ -22,7 +25,14 @@ class _ReportsState extends State<Reports> {
           reports = data;
           isLoading = false;
         });
-      } else {
+      }
+      else if(response.statusCode == 404){
+        setState(() {
+          reports = {"error": "You haven't uploaded any videos."};
+          isLoading = false;
+        });
+      }
+      else {
         print('Request failed with status: ${response.statusCode}.');
         setState(() {
           reports = {"error": 'Request failed with status: ${response.statusCode}.'};
@@ -67,56 +77,69 @@ class _ReportsState extends State<Reports> {
           var title = reportEntry.key;
           IconData iconData;
           Color iconColor;
+          bool showProgress;
 
           switch (report['status']) {
             case 'success':
               iconData = Icons.check_circle_outline;
               iconColor = Colors.green;
+              showProgress = false;
               break;
             case 'failure':
               iconData = Icons.error_outline;
               iconColor = Colors.red;
+              showProgress = false;
               break;
             case 'process':
               iconData = Icons.hourglass_empty;
               iconColor = Colors.amber;
+              showProgress = true;
               break;
             default:
               iconData = Icons.help_outline;
               iconColor = Colors.grey;
+              showProgress = false;
           }
 
           return Card(
-            child: ListTile(
-              leading: Icon(iconData, color: iconColor),
-              title: Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: Icon(iconData, color: iconColor),
+                  title: Text(
+                    title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                  subtitle: Row(
+                    children: [
+                      Text(
+                        '${report['status']}'.toUpperCase(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                          color: iconColor,
+                        ),
+                      ),
+                      SizedBox(width: 10,),
+                      Text(
+                        report['result'],
+                        style: TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  )
                 ),
-              ),
-              subtitle: Row(
-                children: [
-                  Text(
-                    '${report['status']}'.toUpperCase(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16,
-                      color: iconColor,
-                    ),
-                  ),
-                  SizedBox(width: 10,),
-                  Text(
-                    report['result'],
-                    style: TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                  ),
-                ],
-              )
+                showProgress?Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 10.0),
+                  child: CheckpointProgressBar(currentIndex: report['progress']),
+                ):SizedBox(),
+              ],
             ),
           );
         },

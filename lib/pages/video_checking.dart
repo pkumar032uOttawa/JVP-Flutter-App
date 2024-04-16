@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:video_frame_extractor/video_frame_extractor.dart';
 import 'package:jvp_app/utils/illumination_check.dart';
 import 'package:jvp_app/ui/video_check_result.dart';
-import 'package:jvp_app/pages/video_upload_result.dart';
+import 'package:jvp_app/pages/questionnaire.dart';
 import 'package:jvp_app/utils/yolo_detection.dart';
 import 'package:provider/provider.dart';
 
@@ -118,7 +118,7 @@ class _VideoCheckPageState extends State<VideoCheckPage> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => VideoUploadResult(videoPath: widget.videoPath),
+                            builder: (context) => HeartCareScreening(videoPath: widget.videoPath),
                           ),
                         );
                       },
@@ -128,7 +128,7 @@ class _VideoCheckPageState extends State<VideoCheckPage> {
                         padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       ),
                       child: Text(
-                        'Upload to Cloud',
+                        'Answer Questions Before Uploading',
                         style: TextStyle(fontSize: 18),
                       ),
                     )

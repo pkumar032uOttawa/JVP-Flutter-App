@@ -5,8 +5,13 @@ import 'package:jvp_app/model/shared_states.dart';
 
 class VideoUploadResult extends StatefulWidget {
   final String videoPath;
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // TO-DO: answers not used at all due to end of my term.
+  // This is future work to use this answers object
+  // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  final Map<String, bool?> answers;
 
-  VideoUploadResult({required this.videoPath});
+  VideoUploadResult({required this.videoPath, required this.answers});
 
   @override
   State<VideoUploadResult> createState() => _VideoUploadResultState();

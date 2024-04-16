@@ -61,14 +61,14 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
           children: <Widget>[
             GuideStep(
               stepNumber: 1,
-              instruction: 'Place your hand somewhere stable to take a video of your neck and head.',
+              instruction: 'Find support for back and neck to avoid straining your neck muscles',
               visualComponent: Container(
                 height: 300,
                 width: 500,// Set a fixed height for the image
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
-                    image: AssetImage('assets/Step1.png'),
+                    image: AssetImage('assets/Step1.jpg'),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -76,14 +76,14 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
             ),
             GuideStep(
               stepNumber: 2,
-              instruction: 'Turn your head slightly to the left.',
+              instruction: 'Remove anything that covers the neck, the clavicle, and the right ear, such as hair and accessories',
               visualComponent: Container(
                 height: 300,
                 width: 500,// Set a fixed height for the image
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
-                    image: AssetImage('assets/Step2.png'),
+                    image: AssetImage('assets/Step2.jpg'),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -91,14 +91,14 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
             ),
             GuideStep(
               stepNumber: 3,
-              instruction: 'Make sure your ear and the entire neck can be clearly seen in the camera.',
+              instruction: "Hold the phone in your right hand, rest your elbow for stability, and lean back. Adjust until your ear, clavicle, and neck are in view, then focus the camera on your neck's base",
               visualComponent: Container(
                 height: 300,
                 width: 500,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
-                    image: AssetImage('assets/Step3.png'),
+                    image: AssetImage('assets/Step3.jpg'),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -106,14 +106,29 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
             ),
             GuideStep(
               stepNumber: 4,
-              instruction: 'Hold it still and record for 20-25 seconds.',
+              instruction: 'Lean back, turn your head left by 30 degrees with your right hand stable. Adjust your collar to show your clavicle if needed, then start recording. Stay still and avoid any moving, swallowing, chewing, caughing, clenching, and speaking for 30 seconds',
               visualComponent: Container(
                 height: 300,
                 width: 500,// Set a fixed height for the image
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   image: DecorationImage(
-                    image: AssetImage('assets/Step4.png'),
+                    image: AssetImage('assets/Step4.jpg'),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+            ),
+            GuideStep(
+              stepNumber: 4,
+              instruction: 'Stop the recording after 30 seconds',
+              visualComponent: Container(
+                height: 300,
+                width: 500,// Set a fixed height for the image
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: AssetImage('assets/Step5.jpg'),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -161,8 +176,8 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.teal, // Button color
-                    onPrimary: Colors.white, // Text color
+                    backgroundColor: Colors.teal, // Button color
+                    foregroundColor: Colors.white, // Text color
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   ),
                   child: Text(
@@ -189,8 +204,8 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.teal, // Button color
-                      onPrimary: Colors.white, // Text color
+                      backgroundColor : Colors.teal, // Button color
+                      foregroundColor : Colors.white, // Text color
                       padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     ),
                     child: Text(

@@ -4,9 +4,9 @@ class CheckpointProgressBar extends StatelessWidget {
   final int currentIndex; // 0-based index, where 0 means the first checkpoint is in progress.
   final int totalCheckpoints = 5; // Total number of checkpoints.
   final List<String> checkpointLabels = [
-    "Check",
+    "Prepare",
+    "Identify",
     "Amplify",
-    "Extract",
     "Analyze",
     "Complete"
   ];

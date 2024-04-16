@@ -40,15 +40,18 @@ class _LoginState extends State<Login> {
       if (response.statusCode == 200) {
         var result = json.decode(response.body);
         Provider.of<SharedState>(context, listen: false).username = result["username"];
-        Provider.of<SharedState>(context, listen: false).skinBrightness = result["skinColor"];
+        Provider.of<SharedState>(context, listen: false).skinBrightness = result["skinColor"].toDouble();
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => Home(username: result["username"]),
           ),
         );
-      } else{
-        showCustomizedDialog('Error', 'Wrong Password or Username.', context);
+      } else if (response.statusCode == 400){
+        showCustomizedDialog('Error', "Username doesn't exist!", context);
+      }
+      else if (response.statusCode == 401){
+        showCustomizedDialog('Error', 'Wrong Password!', context);
       }
     }
     catch (e) {

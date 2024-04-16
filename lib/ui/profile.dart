@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:jvp_app/model/shared_states.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
@@ -6,57 +8,79 @@ class ProfilePage extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start, // Space items evenly in the column
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            ProfileItem(tag: 'Name', content: 'John Doe'),
-            ProfileItem(tag: 'Phone Number', content: '+123456789'),
-            ProfileItem(tag: 'ID', content: '1234567890'),
-            ProfileItem(tag: 'Status', content: 'Active'),
-            ProfileItem(tag: 'Age', content: '30'),
+            Center(
+              child: CircleAvatar(
+                radius: 60,
+                backgroundImage: AssetImage('assets/profile.png'), // Replace with your image URL
+              ),
+            ),
+            SizedBox(height: 20),
+            ProfileItem(tag: 'Name', content: Provider.of<SharedState>(context, listen: false).username),
+            ProfileItem(tag: 'Email', content: 'johndoe@example.com'),
+            ProfileItem(tag: 'Skin Brightness', content: Provider.of<SharedState>(context, listen: false).skinBrightness.toString()),
+            ProfileItem(tag: 'Reports', content: '4'),
+            SizedBox(height: 20),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text('Edit'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, // Button color
+                  foregroundColor: Colors.white, // Text color
+                ),
+              ),
+            ),
+            Center(
+              child: TextButton(
+                onPressed: () {},
+                child: Text('Logout'),
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.blue, // Text color
+                ),
+              ),
+            ),
           ],
         ),
-    );
+      );
   }
 }
 
 class ProfileItem extends StatelessWidget {
   final String tag;
   final String content;
-  final TextStyle tagStyle = TextStyle(
-    color: Colors.deepOrange,
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-  );
-  final TextStyle contentStyle = TextStyle(
-  color: Colors.black87,
-  fontWeight: FontWeight.w400,
-  decoration: TextDecoration.underline,
-  fontSize: 16,
-  );
 
   ProfileItem({required this.tag, required this.content});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 1, 0, 0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 2, // Adjust the flex to control the space ratio between tag and content
-                child: Text('$tag:', style: tagStyle),
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            flex: 1, // Adjust the flex to control the space ratio between tag and content
+            child: Text(
+              '$tag:',
+              style: TextStyle(
+                color: Colors.black54,
+                fontWeight: FontWeight.w600,
               ),
-              Expanded(
-                flex: 3, // Adjust the flex to control the space ratio between tag and content
-                child: Text(content, style: contentStyle),
-              ),
-            ],
+            ),
           ),
-          SizedBox(height: 30,)
+          SizedBox(width: 10,),
+          Expanded(
+            flex: 2, // Adjust the flex to control the space ratio between tag and content
+            child: Text(
+              content,
+              style: TextStyle(
+                color: Colors.black87,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
         ],
       ),
     );

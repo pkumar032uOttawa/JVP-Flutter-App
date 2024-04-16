@@ -1,7 +1,4 @@
 import 'dart:io';
-
-import 'package:flutter/material.dart';
-import 'package:video_frame_extractor/video_frame_extractor.dart';
 import 'package:image/image.dart' as img;
 
 Future<double> getIlluminationValue(String imagePath) async {

@@ -23,7 +23,7 @@ class _VideoUploadResultState extends State<VideoUploadResult> {
   }
 
   void _uploadVideo() async {
-    String res = await uploadVideo(widget.videoPath, Provider.of<SharedState>(context, listen: false).username);
+    String res = await uploadVideo(widget.videoPath, Provider.of<SharedState>(context, listen: false).username, Provider.of<SharedState>(context, listen: false).skinBrightness);
     setState(() {
       _isUploading = false;
       returnedString = res;

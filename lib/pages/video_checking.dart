@@ -123,8 +123,8 @@ class _VideoCheckPageState extends State<VideoCheckPage> {
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.teal, // Button color
-                        onPrimary: Colors.white, // Text color
+                        backgroundColor : Colors.teal, // Button color
+                        foregroundColor : Colors.white, // Text color
                         padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       ),
                       child: Text(

@@ -90,8 +90,8 @@ class ReportsPage extends StatelessWidget {
           double fontSize = constraints.maxWidth * 0.1;
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
-              primary: Colors.blue, // Background color
-              onPrimary: Colors.white, // Text Color (Foreground color)
+              backgroundColor: Colors.blue, // Background color
+              foregroundColor: Colors.white, // Text Color (Foreground color)
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0),
               ),

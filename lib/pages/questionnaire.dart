@@ -24,7 +24,7 @@ class _HeartCareScreeningState extends State<HeartCareScreening> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Medical Questionnaire Before Uploading Video'),
+        title: Text('Medical Questionnaire'),
         backgroundColor: Colors.redAccent,
       ),
       body: ListView(

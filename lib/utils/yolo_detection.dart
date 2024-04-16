@@ -9,7 +9,10 @@ Future<bool> checkPersonPresence(List<String> imagePaths) async {
 
   for (String path in imagePaths) {
     bool findPerson = await yoloOnImage(vision, path);
-    // if(!findPerson){return false;}
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Here you can turn off human detection by comment the line below: if(!findPerson){return false;}
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    if(!findPerson){return false;}
   }
 
   await vision.closeYoloModel();

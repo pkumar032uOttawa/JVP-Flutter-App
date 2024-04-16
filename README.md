@@ -2,15 +2,18 @@
 
 A new Flutter project for Jugular Vein Pressure
 
-## Getting Started
+## How to clone and use it
 
-This project is a starting point for a Flutter application.
+1. Core code files are all in lib/ folder. Those are all you need for pages, utils, functionalities.
+2. Dependencies are in pubspec.yaml. You can download thoese dependencies easily
+3. Media files like pictures, icons, are in assets/ folder, you also need to configure the path to point it to assets folder so that you can use it
+4. fonts are in fonts/ folder
 
-A few resources to get you started if this is your first Flutter project:
+## Problems you might have while cloning and running it
+1. you need to configure miminum SDK JDK versions according to dependencies. Right now, I hardcode the version which is a bad practice. Feel free to adjust the versions by yourself
+2. you might get the problem of "Warning:(9, 9) Kotlin version that is used for building with Gradle (1.6.0) differs from the one bundled into the IDE plugin (1.8.0)". This can be solved by changing either IDE Plugin version or project Gradle version
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## What if you can't run
+I suggest you to create a new Flutter project, import the lib\, fonts\, assets\, pubspec.yaml and then configure the rest based on errors encountered.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+That would be the best way to correctly set up this project.

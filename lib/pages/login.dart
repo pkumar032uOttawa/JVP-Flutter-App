@@ -4,7 +4,7 @@ import 'package:jvp_app/model/shared_states.dart';
 import 'package:jvp_app/pages/home.dart';
 import 'package:jvp_app/utils/dialog.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert'; // For json encoding/decoding
+import 'dart:convert';
 
 class Login extends StatefulWidget {
   @override

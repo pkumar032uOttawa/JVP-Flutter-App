@@ -59,7 +59,10 @@ dev_dependencies:
   provider: 6.1.1
   flutter_vision: 1.1.4
   web_socket_channel: 2.4.4
-  flutter_local_notifications: 9.9.1
+  shared_preferences:
+  amplify_flutter:
+  amplify_auth_cognito:
+  amplify_authenticator: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

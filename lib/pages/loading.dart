@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'home.dart';
+
 
 class LoadingPage extends StatefulWidget {
   @override
@@ -14,7 +16,12 @@ class _LoadingPageState extends State<LoadingPage> {
   }
   void asyncInit() async {
     await Future.delayed(Duration(seconds: 2)); // Example delay
-    Navigator.pushReplacementNamed(context, '/login');
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Home(username: ""),
+      ),
+    );
   }
   @override
   Widget build(BuildContext context) {

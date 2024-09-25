@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:jvp_app/provider/user_provider.dart';
 import 'package:jvp_app/ui/profile.dart';
-import 'package:jvp_app/utils/websocket.dart';
+import 'package:provider/provider.dart';
+
+import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   final String username;
+
   Home({Key? key, required this.username}) : super(key: key);
+
   @override
   State<Home> createState() => _HomeState();
 }
@@ -15,7 +21,19 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    WebSocketConnection webSocketConnection = new WebSocketConnection(widget.username);
+    _updateUserDetails();
+  }
+
+  Future<void> _updateUserDetails() async {
+    final user = await Amplify.Auth.getCurrentUser();
+    final attributes = await Amplify.Auth.fetchUserAttributes();
+    final email = attributes
+        .firstWhere((attribute) =>
+    attribute.userAttributeKey.toCognitoUserAttributeKey() ==
+        CognitoUserAttributeKey.email)
+        .value;
+    await Provider.of<UserProvider>(context, listen: false)
+        .createUser(user.username, email, user.userId);
   }
 
   void _onItemTapped(int index) {
@@ -33,9 +51,20 @@ class _HomeState extends State<Home> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        backgroundColor: Colors.cyan,
+        title: Text(
+          _selectedIndex == 0? "Reports":"Profile",
+          style: GoogleFonts.nunito(
+            fontWeight: FontWeight.bold,
+            fontSize: 23,
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: true,
+        elevation: 4.0,
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: _pages.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -50,69 +79,77 @@ class _HomeState extends State<Home> {
           ),
         ],
         currentIndex: _selectedIndex,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Color(0xFFAC9292),
+        backgroundColor: Colors.cyan,
+        elevation: 10.0,
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed,
+        selectedFontSize: 14,
+        unselectedFontSize: 12,
       ),
     );
   }
 }
 
 class ReportsPage extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          _buildButton(context, Icons.upload, 'Upload Video', () {
-            Navigator.pushNamed(context, "/video_taking");
-          }),
-          SizedBox(height: 20),
-          _buildButton(context, Icons.report, 'View Reports', () {
-            // Action for View Reports
-            Navigator.pushNamed(context, "/reports");
-          }),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            _buildButton(context, Icons.upload, 'Upload Video', () {
+              Navigator.pushNamed(context, "/video_taking");
+            }),
+            SizedBox(height: 20),
+            _buildButton(context, Icons.report, 'View Reports', () {
+              Navigator.pushNamed(context, "/reports");
+            }),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildButton(BuildContext context, IconData icon, String text, VoidCallback onPressed) {
-    double width = MediaQuery.of(context).size.width * 0.6;
-    double height = MediaQuery.of(context).size.height * 0.25;  // Calculate height based on the desired ratio
+  Widget _buildButton(BuildContext context, IconData icon, String text,
+      VoidCallback onPressed) {
+    double width = MediaQuery.of(context).size.width * 0.8; // Adjusted width
+    double height = MediaQuery.of(context).size.height * 0.12; // Adjusted height
 
     return Container(
+      margin: const EdgeInsets.only(bottom: 20),
       width: width,
       height: height,
       child: LayoutBuilder(
-        builder: (BuildContext context, BoxConstraints constraints) {
-          double fontSize = constraints.maxWidth * 0.1;
-          return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue, // Background color
-              foregroundColor: Colors.white, // Text Color (Foreground color)
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+          builder: (BuildContext context, BoxConstraints constraints) {
+            double fontSize = constraints.maxWidth * 0.08;
+            return ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.cyan,
+                foregroundColor: Colors.white,
+                elevation: 5.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                textStyle: TextStyle(
+                  fontSize: fontSize,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              textStyle: TextStyle(
-                fontSize: fontSize,  // Increased font size
-                fontWeight: FontWeight.bold,  // Bold text
+              onPressed: onPressed,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Icon(icon, size: fontSize), // Adjusted icon size
+                  SizedBox(width: 10),
+                  Text(text),
+                ],
               ),
-            ),
-            onPressed: onPressed,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Icon(icon, size: fontSize),  // Optionally adjust icon size
-                SizedBox(width: 10),
-                Text(text),
-              ],
-            ),
-          );
-        }
-      ),
+            );
+          }),
     );
   }
 }
-

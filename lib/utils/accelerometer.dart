@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:jvp_app/model/shared_states.dart';
+import 'package:jvp_app/provider/shared_states.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:math' as math;
 import 'package:provider/provider.dart';

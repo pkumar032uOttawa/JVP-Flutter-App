@@ -29,6 +29,7 @@ class User extends amplify_core.Model {
   final String id;
   final String? _name;
   final String? _email;
+  final UserType? _userType;
   final amplify_core.TemporalDateTime? _createdAt;
   final amplify_core.TemporalDateTime? _updatedAt;
 
@@ -53,6 +54,19 @@ class User extends amplify_core.Model {
     return _email;
   }
   
+  UserType get userType {
+    try {
+      return _userType!;
+    } catch(e) {
+      throw amplify_core.AmplifyCodeGenModelException(
+          amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            amplify_core.AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
   amplify_core.TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -61,13 +75,14 @@ class User extends amplify_core.Model {
     return _updatedAt;
   }
   
-  const User._internal({required this.id, name, email, createdAt, updatedAt}): _name = name, _email = email, _createdAt = createdAt, _updatedAt = updatedAt;
+  const User._internal({required this.id, name, email, required userType, createdAt, updatedAt}): _name = name, _email = email, _userType = userType, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory User({String? id, String? name, String? email}) {
+  factory User({String? id, String? name, String? email, required UserType userType}) {
     return User._internal(
       id: id == null ? amplify_core.UUID.getUUID() : id,
       name: name,
-      email: email);
+      email: email,
+      userType: userType);
   }
   
   bool equals(Object other) {
@@ -80,7 +95,8 @@ class User extends amplify_core.Model {
     return other is User &&
       id == other.id &&
       _name == other._name &&
-      _email == other._email;
+      _email == other._email &&
+      _userType == other._userType;
   }
   
   @override
@@ -94,6 +110,7 @@ class User extends amplify_core.Model {
     buffer.write("id=" + "$id" + ", ");
     buffer.write("name=" + "$_name" + ", ");
     buffer.write("email=" + "$_email" + ", ");
+    buffer.write("userType=" + (_userType != null ? amplify_core.enumToString(_userType)! : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -101,21 +118,24 @@ class User extends amplify_core.Model {
     return buffer.toString();
   }
   
-  User copyWith({String? name, String? email}) {
+  User copyWith({String? name, String? email, UserType? userType}) {
     return User._internal(
       id: id,
       name: name ?? this.name,
-      email: email ?? this.email);
+      email: email ?? this.email,
+      userType: userType ?? this.userType);
   }
   
   User copyWithModelFieldValues({
     ModelFieldValue<String?>? name,
-    ModelFieldValue<String?>? email
+    ModelFieldValue<String?>? email,
+    ModelFieldValue<UserType>? userType
   }) {
     return User._internal(
       id: id,
       name: name == null ? this.name : name.value,
-      email: email == null ? this.email : email.value
+      email: email == null ? this.email : email.value,
+      userType: userType == null ? this.userType : userType.value
     );
   }
   
@@ -123,17 +143,19 @@ class User extends amplify_core.Model {
     : id = json['id'],
       _name = json['name'],
       _email = json['email'],
+      _userType = amplify_core.enumFromString<UserType>(json['userType'], UserType.values),
       _createdAt = json['createdAt'] != null ? amplify_core.TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? amplify_core.TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'name': _name, 'email': _email, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'name': _name, 'email': _email, 'userType': amplify_core.enumToString(_userType), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
   
   Map<String, Object?> toMap() => {
     'id': id,
     'name': _name,
     'email': _email,
+    'userType': _userType,
     'createdAt': _createdAt,
     'updatedAt': _updatedAt
   };
@@ -142,6 +164,7 @@ class User extends amplify_core.Model {
   static final ID = amplify_core.QueryField(fieldName: "id");
   static final NAME = amplify_core.QueryField(fieldName: "name");
   static final EMAIL = amplify_core.QueryField(fieldName: "email");
+  static final USERTYPE = amplify_core.QueryField(fieldName: "userType");
   static var schema = amplify_core.Model.defineSchema(define: (amplify_core.ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
     modelSchemaDefinition.pluralName = "Users";
@@ -169,6 +192,12 @@ class User extends amplify_core.Model {
       key: User.EMAIL,
       isRequired: false,
       ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.field(
+      key: User.USERTYPE,
+      isRequired: true,
+      ofType: amplify_core.ModelFieldType(amplify_core.ModelFieldTypeEnum.enumeration)
     ));
     
     modelSchemaDefinition.addField(amplify_core.ModelFieldDefinition.nonQueryField(

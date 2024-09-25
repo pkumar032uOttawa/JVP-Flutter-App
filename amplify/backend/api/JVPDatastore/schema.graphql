@@ -2,4 +2,30 @@ type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   name: String
   email: String
+  userType: UserType!
+}
+
+type UserReport @model {
+  id: ID!
+  userId: String!
+  status: PostStatus!
+  videoUrl: String!
+  commentsByDoctor: String
+  heartDisease: Boolean!
+  everHadAStroke: Boolean!
+  experienceChestPainsFrequently: Boolean!
+  sufferHighBloodPressure: Boolean!
+  familyHistoryHeartDisease: Boolean!
+  skinColor: String!
+  smoke: Boolean!
+}
+
+enum PostStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum UserType {
+  USER
+  DOCTOR
 }

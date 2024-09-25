@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:jvp_app/model/shared_states.dart';
+import 'package:jvp_app/provider/shared_states.dart';
 import 'package:jvp_app/pages/home.dart';
 import 'package:jvp_app/utils/dialog.dart';
 import 'package:provider/provider.dart';

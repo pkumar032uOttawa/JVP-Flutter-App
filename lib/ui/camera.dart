@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:jvp_app/model/shared_states.dart';
+import 'package:jvp_app/provider/shared_states.dart';
 import 'package:jvp_app/utils/accelerometer.dart';
 import 'dart:async';
 import 'package:provider/provider.dart';

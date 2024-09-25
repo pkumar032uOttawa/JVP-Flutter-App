@@ -5,7 +5,7 @@ import 'package:jvp_app/ui/video_player.dart';
 import 'package:jvp_app/ui/guide_step.dart';
 import 'package:jvp_app/utils/delete_file.dart';
 import 'package:provider/provider.dart';
-import 'package:jvp_app/model/shared_states.dart';
+import 'package:jvp_app/provider/shared_states.dart';
 
 class VideoGuidePage extends StatefulWidget {
   @override
@@ -53,8 +53,8 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Video Taking Guideline'),
-        backgroundColor: Colors.teal,
+        title: Text('Video Taking Guideline', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+        backgroundColor: Colors.cyan,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -176,7 +176,7 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal, // Button color
+                    backgroundColor: Colors.cyan, // Button color
                     foregroundColor: Colors.white, // Text color
                     padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                   ),
@@ -195,7 +195,6 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
                       setState(() {
                         closeVideos=true;
                       });
-                      // Navigate to VideoCheckPage when the button is pressed
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -204,7 +203,7 @@ class _VideoGuidePageState extends State<VideoGuidePage> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor : Colors.teal, // Button color
+                      backgroundColor : Colors.cyan, // Button color
                       foregroundColor : Colors.white, // Text color
                       padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                     ),

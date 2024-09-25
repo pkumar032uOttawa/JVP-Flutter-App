@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:jvp_app/model/shared_states.dart';
+import 'package:jvp_app/provider/shared_states.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_frame_extractor/video_frame_extractor.dart';
@@ -100,8 +100,8 @@ class _VideoCheckPageState extends State<VideoCheckPage> {
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            if (_isDurationValid != null && illuStatus != null && _presencePerson != null && _isAccelerometerValid != null)
-              if (_isDurationValid! && illuStatus == 2 && _isAccelerometerValid! && _presencePerson!)
+           /* if (_isDurationValid != null && illuStatus != null && _presencePerson != null && _isAccelerometerValid != null)
+              if (_isDurationValid! && illuStatus == 2 && _isAccelerometerValid! && _presencePerson!)*/
                 Column(
                   children: [
                     Icon(Icons.check_circle_outline, size: 100, color: Colors.green),
@@ -134,7 +134,7 @@ class _VideoCheckPageState extends State<VideoCheckPage> {
                     )
                   ],
                 )
-              else
+              /*else
                 Column(
                   children: [
                     RequirementCard(
@@ -154,7 +154,7 @@ class _VideoCheckPageState extends State<VideoCheckPage> {
                         explanation: _presencePerson! ? "Can consistently see you in camera!" : "Cant consistently see you, make sure you are always in camera!"
                     ),
                   ],
-                ),
+                ),*/
           ],
         ),
       ),

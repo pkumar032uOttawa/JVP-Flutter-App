@@ -65,6 +65,9 @@ dev_dependencies:
   amplify_authenticator: ^2.0.0
   amplify_datastore:
   amplify_core:
+  amplify_storage_s3:
+  flutter_riverpod:
+  google_fonts:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

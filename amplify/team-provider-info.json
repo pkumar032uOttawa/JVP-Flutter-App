@@ -10,6 +10,17 @@
       "StackName": "amplify-jvpdatastore-staging-59f8b",
       "StackId": "arn:aws:cloudformation:eu-north-1:515966492483:stack/amplify-jvpdatastore-staging-59f8b/fd0aee70-7aeb-11ef-a005-0eceb07f4307",
       "AmplifyAppId": "d3vl8dfw3zg965"
+    },
+    "categories": {
+      "auth": {
+        "jvpdatastore36299caa": {}
+      },
+      "api": {
+        "JVPDatastore": {}
+      },
+      "storage": {
+        "S3JvpApp": {}
+      }
     }
   }
 }

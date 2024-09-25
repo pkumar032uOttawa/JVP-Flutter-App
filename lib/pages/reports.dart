@@ -4,7 +4,7 @@ import 'dart:io';
 import 'dart:convert' as convert;
 import 'package:jvp_app/utils/progress_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:jvp_app/model/shared_states.dart';
+import 'package:jvp_app/provider/shared_states.dart';
 import 'package:jvp_app/pages/report_detail.dart';
 
 class Reports extends StatefulWidget {
@@ -19,28 +19,7 @@ class _ReportsState extends State<Reports> {
 
   Future<void> getReports() async {
     try {
-      Response response = await get(Uri.parse('https://jvp.cepheus0.com:2531/fetchData/' + username));
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = convert.jsonDecode(response.body);
-        print("Got data"+data.toString());
-        setState(() {
-          reports = data;
-          isLoading = false;
-        });
-      } else if (response.statusCode == 404) {
-        setState(() {
-          reports = {"error": "You haven't uploaded any videos."};
-          isLoading = false;
-        });
-      } else {
-        print('Request failed with status: ${response.statusCode}.');
-        setState(() {
-          reports = {
-            "error": 'Request failed with status: ${response.statusCode}.'
-          };
-          isLoading = false;
-        });
-      }
+
     } catch (e) {
       print('Caught exception: $e');
       if (e is SocketException) {

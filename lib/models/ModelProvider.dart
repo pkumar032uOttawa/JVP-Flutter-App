@@ -21,14 +21,18 @@
 
 import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'User.dart';
+import 'UserReport.dart';
 
+export 'PostStatus.dart';
 export 'User.dart';
+export 'UserReport.dart';
+export 'UserType.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "3f49549174d06d05ceb6036a4f4e06cd";
+  String version = "e80ca6443de959d8d55f4f072b860e57";
   @override
-  List<amplify_core.ModelSchema> modelSchemas = [User.schema];
+  List<amplify_core.ModelSchema> modelSchemas = [User.schema, UserReport.schema];
   @override
   List<amplify_core.ModelSchema> customTypeSchemas = [];
   static final ModelProvider _instance = ModelProvider();
@@ -39,6 +43,8 @@ class ModelProvider implements amplify_core.ModelProviderInterface {
     switch(modelName) {
       case "User":
         return User.classType;
+      case "UserReport":
+        return UserReport.classType;
       default:
         throw Exception("Failed to find model in model provider for model name: " + modelName);
     }

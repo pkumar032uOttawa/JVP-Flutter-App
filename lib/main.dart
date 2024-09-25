@@ -26,6 +26,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool _amplifyConfigured = false;
+
   @override
   void initState() {
     super.initState();
@@ -44,19 +46,20 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Authenticator(
       onException: (exception) {
         print('[ERROR]: $exception');
       },
-      signUpForm: SignUpForm.custom(fields: [
-        SignUpFormField.name(required: true),
-        SignUpFormField.username(),
-        SignUpFormField.password(),
-        SignUpFormField.passwordConfirmation(),
-      ]),
+      signUpForm: SignUpForm.custom(
+        fields: [
+          SignUpFormField.name(required: true),
+          SignUpFormField.username(),
+          SignUpFormField.password(),
+          SignUpFormField.passwordConfirmation(),
+        ],
+      ),
       child: MaterialApp(
         builder: Authenticator.builder(),
         initialRoute: '/',
@@ -73,4 +76,3 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
-

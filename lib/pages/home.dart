@@ -28,7 +28,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     List<Widget> _pages = [
       ReportsPage(),
-      ProfilePage(),
+      ViewUserAttributesScreen(),
     ];
 
     return Scaffold(

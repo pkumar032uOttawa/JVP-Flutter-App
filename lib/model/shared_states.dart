@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class SharedState with ChangeNotifier {
   bool _isAccelerometerValid = false;
   double _skinBrightness = 255;

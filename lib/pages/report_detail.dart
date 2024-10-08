@@ -1,18 +1,17 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'package:jvp_app/models/ModelProvider.dart';
+import 'package:jvp_app/ui/video_player.dart';
+import 'package:provider/provider.dart';
+import '../provider/user_provider.dart';
 
 class ReportDetail extends StatefulWidget {
-  final String username;
-  final String filename;
-  final String status;
-  final String message;
-  final String HR;
-  final String BR;
-  final String VP;
+  final String title;
+  final UserReport userReport;
 
-  ReportDetail({required this.username, required this.filename, required this.status, required this.message, required this.HR, required this.BR, required this.VP});
+  ReportDetail({
+    required this.title,
+    required this.userReport,
+  });
 
   @override
   State<ReportDetail> createState() => _ReportDetailState();
@@ -20,17 +19,47 @@ class ReportDetail extends StatefulWidget {
 
 class _ReportDetailState extends State<ReportDetail> {
   bool imageFailed = false;
-  late String imageUrl;
-  String getTitle(status){
-    if(status == "success"){
+  late String videoUrl;
+
+  String getTitle(status) {
+    if (status == "success") {
       return "Report Produced!";
-    }
-    else if(status == "failure"){
+    } else if (status == "failure") {
       return "Video Analysis Failed!";
-    }
-    else{
+    } else {
       return "In Progress";
     }
+  }
+
+  Map<String, bool?> answers = {
+    'Do you have heart disease?': null,
+    'Have you ever had a stroke?': null,
+    'Do you experience chest pains frequently?': null,
+    'Do you suffer from high blood pressure?': null,
+    'Is there a family history of heart disease?': null,
+    'Do you smoke?': null,
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    final report = widget.userReport;
+    answers['Do you have heart disease?'] = report.heartDisease;
+    answers["Have you ever had a stroke?"] = report.everHadAStroke;
+    answers["Do you experience chest pains frequently?"] =
+        report.experienceChestPainsFrequently;
+    answers["Do you suffer from high blood pressure?"] =
+        report.sufferHighBloodPressure;
+    answers["Is there a family history of heart disease?"] =
+        report.familyHistoryHeartDisease;
+    answers["Do you smoke?"] = report.smoke;
+    _getVideoUrl();
+  }
+
+  _getVideoUrl() async {
+    videoUrl = await Provider.of<UserProvider>(context, listen: false)
+        .getUrl(widget.userReport.videoUrl);
+    print(videoUrl);
   }
 
   @override
@@ -38,14 +67,20 @@ class _ReportDetailState extends State<ReportDetail> {
     // Calculate the total height of the screen
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    imageUrl = 'https://jvp.cepheus0.com:2531/getReportImage/' + widget.username+'/'+widget.filename;
+    final report = widget.userReport;
+    final commentsByDoctor = widget.userReport.commentsByDoctor;
+
     return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title + " Details"),
+      ),
       body: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             // Top half with Gradient Background
             Container(
-              height: screenHeight * 0.5, // 50% of the screen height for the gradient background
+              height: screenHeight * 0.5,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
@@ -55,7 +90,7 @@ class _ReportDetailState extends State<ReportDetail> {
               ),
               alignment: Alignment.center,
               child: Text(
-                getTitle(widget.status),
+                getTitle(widget.userReport.feedbackStatus),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
@@ -65,63 +100,158 @@ class _ReportDetailState extends State<ReportDetail> {
               ),
             ),
             // Bottom half with White Background and Information Tiles
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: Text(
+                "Details Submitted",
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 17.0,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 40,
+            ),
+            SizedBox(
+              width: screenWidth,
+              child: VideoPlayerUrl(
+                videoUrl: widget.userReport.videoUrl,
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ...answers.keys.map((String question) {
+              bool isDisabled = answers[question] != null;
+              return Card(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      title: Text(
+                        question,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Radio<bool>(
+                          value: true,
+                          groupValue: answers[question],
+                          onChanged: isDisabled
+                              ? null
+                              : (bool? value) {
+                                  setState(() {
+                                    answers[question] = value;
+                                  });
+                                },
+                        ),
+                        Text('Yes'),
+                        Radio<bool>(
+                          value: false,
+                          groupValue: answers[question],
+                          onChanged: isDisabled
+                              ? null
+                              : (bool? value) {
+                                  setState(() {
+                                    answers[question] = value;
+                                  });
+                                },
+                        ),
+                        Text('No'),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+
             Container(
               color: Colors.white,
               child: Column(
                 children: [
-                  InformationTile(
-                    title: 'Message',
-                    value: widget.message, // Example data, replace with actual data
-                    icon: Icons.message_outlined,
-                  ),
-                  InformationTile(
-                    title: 'Heart Rate',
-                    value: '${widget.HR} bpm', // Example data, replace with actual data
-                    icon: Icons.favorite,
-                  ),
-                  InformationTile(
-                    title: 'Breathing Rate',
-                    value: '${widget.BR} bpm', // Example data, replace with actual data
-                    icon: Icons.air,
-                  ),
-                  InformationTile(
-                    title: 'Jugular Vein Height',
-                    value: '${widget.VP} cm', // Example data, replace with actual data
-                    icon: Icons.show_chart,
-                  ),
-                  InformationTile(
-                    title: 'Image of Detected Results',
-                    value: 'Double check to see if the three positions are detected correctly', // Example data, replace with actual data
-                    icon: Icons.arrow_downward_outlined,
-                  ),
-
-                  Container(
-                    height: screenHeight,
-                    width: screenWidth,
-                    child: Center(
-                        // Use Image.network to load and display the image from the server
-                        child: Image.network(imageUrl,
-                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return Center(
-                              child: CircularProgressIndicator(
-                                value: loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                    : null,
+                  commentsByDoctor != null
+                      ? InformationTile(
+                          title: 'Message',
+                          value: commentsByDoctor,
+                          icon: Icons.message_outlined,
+                        )
+                      : SizedBox(),
+                  report.heartRate != null
+                      ? InformationTile(
+                          title: 'Heart Rate',
+                          value: '${report.heartRate} bpm',
+                          icon: Icons.favorite,
+                        )
+                      : SizedBox(),
+                  report.breathingRate != null
+                      ? InformationTile(
+                          title: 'Breathing Rate',
+                          value: '${report.breathingRate} bpm',
+                          icon: Icons.air,
+                        )
+                      : SizedBox(),
+                  report.JugularVeinHeight != null
+                      ? InformationTile(
+                          title: 'Jugular Vein Height',
+                          value: '${report.JugularVeinHeight} cm',
+                          icon: Icons.show_chart,
+                        )
+                      : SizedBox(),
+                  report.ImageOfDetectedResultUrl != null
+                      ? Column(
+                          children: [
+                            InformationTile(
+                              title: 'Image of Detected Results',
+                              value:
+                                  'Double check to see if the three positions are detected correctly',
+                              icon: Icons.arrow_downward_outlined,
+                            ),
+                            Container(
+                              height: screenHeight,
+                              width: screenWidth,
+                              child: Center(
+                                child: Image.network(
+                                  report.ImageOfDetectedResultUrl!,
+                                  loadingBuilder: (BuildContext context,
+                                      Widget child,
+                                      ImageChunkEvent? loadingProgress) {
+                                    if (loadingProgress == null) return child;
+                                    return Center(
+                                      child: CircularProgressIndicator(
+                                        value: loadingProgress
+                                                    .expectedTotalBytes !=
+                                                null
+                                            ? loadingProgress
+                                                    .cumulativeBytesLoaded /
+                                                loadingProgress
+                                                    .expectedTotalBytes!
+                                            : null,
+                                      ),
+                                    );
+                                  },
+                                  errorBuilder: (BuildContext context,
+                                      Object exception,
+                                      StackTrace? stackTrace) {
+                                    return InformationTile(
+                                      title: 'Failed to load image',
+                                      value: exception.toString(),
+                                      icon: Icons.error_outline,
+                                    );
+                                  },
+                                ),
                               ),
-                            );
-                          },
-                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
-                            return InformationTile(
-                              title: 'Failed to load image',
-                              value: exception.toString(), // Example data, replace with actual data
-                              icon: Icons.error_outline,
-                            );
-                          },
-                        ),
-                      ),
-                  ),
-                  // Add more tiles if needed
+                            ),
+                          ],
+                        )
+                      : SizedBox(),
                 ],
               ),
             ),
@@ -130,11 +260,7 @@ class _ReportDetailState extends State<ReportDetail> {
       ),
     );
   }
-
-
 }
-
-
 
 class InformationTile extends StatelessWidget {
   final String title;

@@ -23,14 +23,16 @@ import 'package:amplify_core/amplify_core.dart' as amplify_core;
 import 'User.dart';
 import 'UserReport.dart';
 
+export 'FeedbackStatus.dart';
 export 'PostStatus.dart';
+export 'Status.dart';
 export 'User.dart';
 export 'UserReport.dart';
 export 'UserType.dart';
 
 class ModelProvider implements amplify_core.ModelProviderInterface {
   @override
-  String version = "e80ca6443de959d8d55f4f072b860e57";
+  String version = "855cd7cffe6ff5d503f4f5ed5f5b34c9";
   @override
   List<amplify_core.ModelSchema> modelSchemas = [User.schema, UserReport.schema];
   @override

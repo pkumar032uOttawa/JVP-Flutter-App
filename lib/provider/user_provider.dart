@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:jvp_app/models/ModelProvider.dart';
 import 'dart:io' as io;
 import 'package:aws_common/vm.dart';
+import 'package:uuid/uuid.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 
 class UserProvider extends ChangeNotifier {
   Future<void> createUser(String name, String email, String id) async {
@@ -64,10 +66,6 @@ class UserProvider extends ChangeNotifier {
         UserReport.classType,
         where: UserReport.USERID.eq(userId),
       );
-      if (sexyObjects.isEmpty) {
-        print("No objects with ID: $userId");
-        return null;
-      }
       return sexyObjects;
     } catch (e) {
       print(e);
@@ -103,17 +101,39 @@ class UserProvider extends ChangeNotifier {
       print(e);
     }
   }
+
   Future<String> uploadIOFile(String filePath) async {
     try {
+      var uuid = Uuid();
+      final user = await Amplify.Auth.getCurrentUser();
+      String randomId = uuid.v4();
       final awsFile = AWSFilePlatform.fromFile(io.File(filePath));
+      final fileId = randomId;
       final uploadResult = await Amplify.Storage.uploadFile(
-        path: StoragePath.fromString( 'upload/file.jpeg'),
+        path: StoragePath.fromString( 'upload/videos/${user.userId}/$fileId'),
         localFile: awsFile,
         onProgress: (progress) {
           safePrint('Fraction completed: ${progress.fractionCompleted}');
         },
       ).result;
-      return uploadResult.uploadedItem.path;
+      return 'upload/videos/${user.userId}/$fileId';
+    } on StorageException catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> getUrl(String path) async {
+    try {
+      final result = await Amplify.Storage.getUrl(
+        path: StoragePath.fromString(path),
+        options: const StorageGetUrlOptions(
+          pluginOptions: S3GetUrlPluginOptions(
+            validateObjectExistence: true,
+            expiresIn: Duration(days: 1),
+          ),
+        ),
+      ).result;
+      return result.url.toString();
     } on StorageException catch (e) {
       rethrow;
     }

@@ -38,20 +38,19 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  Future<User?> readByUserId(String userId) async {
+  Future<User?> getUserByUserId(String userId) async {
     try {
-      final sexyObjects = await Amplify.DataStore.query(
+      final user = await Amplify.DataStore.query(
         User.classType,
         where: User.ID.eq(userId),
       );
 
-      if (sexyObjects.isEmpty) {
+      if (user.isEmpty) {
         print("No objects with ID: $userId");
         return null;
       }
 
-      final sexyObject = sexyObjects.first;
-      print(sexyObject.toString());
+      final sexyObject = user.first;
       return sexyObject;
     } catch (e) {
       print(e);
@@ -75,7 +74,7 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> updateUserName(String userId, User updatedUser) async {
     try {
-      final user = await readByUserId(userId);
+      final user = await getUserByUserId(userId);
       if (user != null) {
         final updatedObject = user.copyWith(
           name: updatedUser.name,
@@ -91,7 +90,7 @@ class UserProvider extends ChangeNotifier {
 
   Future<void> deleteUser(String userId) async {
     try {
-      final user = await readByUserId(userId);
+      final user = await getUserByUserId(userId);
       if (user != null) {
         await Amplify.DataStore.delete(user);
         print('Deleted object with ID: ${user.id}');

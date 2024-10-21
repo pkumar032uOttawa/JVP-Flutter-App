@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:jvp_app/models/ModelProvider.dart';
+import 'package:jvp_app/provider/admin_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:jvp_app/provider/shared_states.dart';
 import 'package:jvp_app/pages/report_detail.dart';
@@ -8,6 +9,10 @@ import '../provider/user_provider.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 
 class Reports extends StatefulWidget {
+  final bool? isAdmin;
+
+  const Reports({super.key, this.isAdmin = false});
+
   @override
   State<Reports> createState() => _ReportsState();
 }
@@ -20,13 +25,19 @@ class _ReportsState extends State<Reports> {
   Future<List<UserReport>?> _getReports() async {
     try {
       final user = await Amplify.Auth.getCurrentUser();
-      final reports = await Provider.of<UserProvider>(context, listen: false)
-          .readReportsByUserId(user.userId);
+      List<UserReport>? _userReports;
+      if (widget.isAdmin!) {
+        _userReports = await Provider.of<AdminProvider>(context, listen: false)
+            .readAllReports();
+      } else {
+        _userReports = await Provider.of<UserProvider>(context, listen: false)
+            .readReportsByUserId(user.userId);
+      }
       setState(() {
-        _reports = reports;
+        _reports = _userReports;
         isLoading = false;
       });
-      return reports;
+      return _reports;
     } catch (e) {
       print('Caught exception: $e');
       setState(() {
@@ -43,11 +54,22 @@ class _ReportsState extends State<Reports> {
     _getReports();
   }
 
+
   @override
   Widget build(BuildContext context) {
+    final adminProvider = Provider.of<AdminProvider>(context);
+    final userReports = adminProvider.userReports;
+    if(widget.isAdmin ?? false) _reports = userReports;
     return Scaffold(
         appBar: AppBar(
-          title: Text('View Reports'),
+          title: Text(
+              widget.isAdmin! ? 'Manage Reports Submitted' : 'View Reports'),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
@@ -65,11 +87,6 @@ class _ReportsState extends State<Reports> {
                               iconData = Icons.check_circle_outline;
                               iconColor = Colors.green;
                               break;
-                            // case 'failure':
-                            //   iconData = Icons.error_outline;
-                            //   iconColor = Colors.red;
-                            //   showProgress = false;
-                            //   break;
                             case FeedbackStatus.PENDING:
                               iconData = Icons.hourglass_empty;
                               iconColor = Colors.amber;
@@ -87,6 +104,7 @@ class _ReportsState extends State<Reports> {
                                   builder: (context) => ReportDetail(
                                     userReport: report,
                                     title: "Report ${index + 1}",
+                                    isAdmin: widget.isAdmin ?? false,
                                   ),
                                 ),
                               );
@@ -106,7 +124,7 @@ class _ReportsState extends State<Reports> {
                                       subtitle: Row(
                                         children: [
                                           Text(
-                                            '${report.commentsByDoctor == null ? "Feedback Pending By Doctor":"Feedback Added By Doctor"}'
+                                            '${report.commentsByDoctor == null ? "Feedback Pending" : "Feedback Given"}'
                                                 .toUpperCase(),
                                             style: TextStyle(
                                               fontWeight: FontWeight.normal,

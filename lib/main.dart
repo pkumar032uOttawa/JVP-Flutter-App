@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:jvp_app/pages/doctor/main/main_screen_doctor.dart';
 import 'package:jvp_app/pages/loading.dart';
 import 'package:jvp_app/pages/reports.dart';
 import 'package:jvp_app/pages/video_taking.dart';
+import 'package:jvp_app/provider/admin_provider.dart';
 import 'package:jvp_app/provider/shared_states.dart';
 import 'package:jvp_app/provider/user_provider.dart';
 import 'package:jvp_app/ui/camera.dart';
@@ -22,11 +24,13 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => SharedState()),
         ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => AdminProvider()),
       ],
       child: MyApp(),
     ),
   );
 }
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
@@ -35,7 +39,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
@@ -48,7 +51,7 @@ class _MyAppState extends State<MyApp> {
       final auth = AmplifyAuthCognito();
       final provider = ModelProvider();
       final dataStorePlugin = AmplifyDataStore(modelProvider: provider);
-      await Amplify.addPlugins([auth, storage,dataStorePlugin]);
+      await Amplify.addPlugins([auth, storage, dataStorePlugin]);
       await Amplify.configure(amplifyconfig);
     } on Exception catch (e) {
       safePrint('An error occurred configuring Amplify: $e');
@@ -80,6 +83,7 @@ class _MyAppState extends State<MyApp> {
         debugShowCheckedModeBanner: false,
         routes: {
           '/': (context) => LoadingPage(),
+          '/main_screen_doctor': (context) => MainScreenDoctor(),
           '/reports': (context) => Reports(),
           '/video_taking': (context) => VideoGuidePage(),
           '/camera': (context) => CameraApp(),

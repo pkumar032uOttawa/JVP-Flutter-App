@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:jvp_app/provider/user_provider.dart';
 import 'package:jvp_app/ui/profile.dart';
-import 'package:provider/provider.dart';
-
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
@@ -21,19 +17,6 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    _updateUserDetails();
-  }
-
-  Future<void> _updateUserDetails() async {
-    final user = await Amplify.Auth.getCurrentUser();
-    final attributes = await Amplify.Auth.fetchUserAttributes();
-    final email = attributes
-        .firstWhere((attribute) =>
-    attribute.userAttributeKey.toCognitoUserAttributeKey() ==
-        CognitoUserAttributeKey.email)
-        .value;
-    await Provider.of<UserProvider>(context, listen: false)
-        .createUser(user.username, email, user.userId);
   }
 
   void _onItemTapped(int index) {
@@ -41,7 +24,6 @@ class _HomeState extends State<Home> {
       _selectedIndex = index;
     });
   }
-
   @override
   Widget build(BuildContext context) {
     List<Widget> _pages = [

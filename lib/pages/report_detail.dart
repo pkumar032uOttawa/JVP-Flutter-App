@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:jvp_app/models/ModelProvider.dart';
+import 'package:jvp_app/pages/doctor/report_feedback/report_feedback.dart';
+import 'package:jvp_app/pages/reports.dart';
 import 'package:jvp_app/ui/video_player.dart';
 import 'package:provider/provider.dart';
 import '../provider/user_provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ReportDetail extends StatefulWidget {
+  final bool isAdmin;
   final String title;
   final UserReport userReport;
 
   ReportDetail({
     required this.title,
     required this.userReport,
+    this.isAdmin = false,
   });
 
   @override
@@ -19,7 +24,7 @@ class ReportDetail extends StatefulWidget {
 
 class _ReportDetailState extends State<ReportDetail> {
   bool imageFailed = false;
-  late String videoUrl;
+  String? videoUrl;
 
   String getTitle(status) {
     if (status == "success") {
@@ -64,7 +69,6 @@ class _ReportDetailState extends State<ReportDetail> {
 
   @override
   Widget build(BuildContext context) {
-    // Calculate the total height of the screen
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     final report = widget.userReport;
@@ -115,11 +119,31 @@ class _ReportDetailState extends State<ReportDetail> {
             SizedBox(
               height: 40,
             ),
-            SizedBox(
-              width: screenWidth,
-              child: VideoPlayerUrl(
-                videoUrl: widget.userReport.videoUrl,
-              ),
+            FutureBuilder<void>(
+              future: _getVideoUrl(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // Return the camera preview
+                  return SizedBox(
+                    width: screenWidth,
+                    child: videoUrl != null
+                        ? VideoPlayerUrl(
+                            videoUrl: videoUrl!,
+                          )
+                        : Text(
+                            "Invalid Video Submitted or Video is Deleted",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
             ),
             SizedBox(
               height: 20,
@@ -172,7 +196,9 @@ class _ReportDetailState extends State<ReportDetail> {
                 ),
               );
             }).toList(),
-
+            SizedBox(
+              height: 30,
+            ),
             Container(
               color: Colors.white,
               child: Column(
@@ -255,6 +281,45 @@ class _ReportDetailState extends State<ReportDetail> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
+            if (widget.isAdmin)
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: 30),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: 60,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReportFeedback(
+                              userReport: widget.userReport,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          backgroundColor: Colors.grey,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          )),
+                      child: Text(
+                        "Add Feedback",
+                        style: GoogleFonts.nunito(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
